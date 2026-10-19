@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found — Rojina</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(16px,2.2vw,36px);background:#0E0E0E;color:#EDEAE4;font-family:"Inter Tight",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    header,footer{display:flex;justify-content:space-between;font-size:13px}
+    h1{font-size:clamp(120px,34vw,600px);font-weight:600;letter-spacing:-.07em;line-height:.8}
+    p{font-size:clamp(24px,3vw,48px);letter-spacing:-.03em;max-width:14em;margin-top:24px}
+    em{font-family:"Instrument Serif",serif;font-weight:400}
+    a{color:inherit}
+    .home{display:inline-grid;place-items:center;width:140px;aspect-ratio:1;border-radius:50%;background:#FF4F1F;color:#0E0E0E;text-decoration:none;font-weight:500;margin-top:40px}
+  </style>
+</head>
+<body>
+  <header><span>Rojina®</span><span>Error 404</span></header>
+  <main>
+    <h1>404</h1>
+    <p>This page wandered <em>off the grid.</em></p>
+    <a class="home" id="home" href="/">Go home</a>
+  </main>
+  <footer><span>© Rojina</span><span>Lost, but in style</span></footer>
+  <script>
+    // On a GitHub Pages project site (user.github.io/repo/) home is /repo/
+    var seg = location.pathname.split('/')[1];
+    if (location.hostname.endsWith('github.io') && location.hostname.split('.').length === 3 && seg) {
+      document.getElementById('home').href = '/' + seg + '/';
+    }
+  </script>
+</body>
+</html>

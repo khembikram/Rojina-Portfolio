@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rojina — Multidisciplinary Designer</title>
+  <meta name="description" content="Rojina is a multidisciplinary designer crafting brand identities, digital products and motion with intent.">
+  <meta name="theme-color" content="#EDEAE4">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Rojina — Multidisciplinary Designer">
+  <meta property="og:description" content="Brand identity, digital product and motion design.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+  </script>
+  <noscript><style>.loader{display:none}body.is-loading{overflow:auto}</style></noscript>
+</head>
+
+<body class="is-loading">
+
+  <!-- Loader -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <div class="loader__top">
+        <span>Rojina<sup>®</sup></span>
+        <span>Portfolio — <span data-year>2026</span></span>
+      </div>
+      <div class="loader__bottom">
+        <p class="loader__note">Brand<br>Digital<br>Motion</p>
+        <div class="loader__count"><span class="loader__num">0</span><span class="loader__pct">%</span></div>
+      </div>
+      <div class="loader__bar"><span></span></div>
+    </div>
+  </div>
+
+  <!-- Custom cursor -->
+  <div class="cursor" aria-hidden="true">
+    <div class="cursor__ring"><span class="cursor__label">View</span></div>
+    <div class="cursor__dot"></div>
+  </div>
+
+  <canvas class="webgl" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <header class="nav">
+    <a href="#top" class="nav__logo">Rojina<sup>®</sup></a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#work">Work<sup>05</sup></a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <span class="nav__status"><i></i>Available for projects</span>
+    <span class="nav__time" data-time>—</span>
+  </header>
+
+  <main id="top">
+
+    <!-- Hero -->
+    <section class="hero" data-scene="hero">
+      <div class="hero__top">
+        <p class="hero__intro" data-hero-fade>
+          Multidisciplinary designer shaping <em>brands</em>, <em>interfaces</em> &amp; <em>motion</em> that people remember.
+        </p>
+        <p class="hero__index" data-hero-fade>
+          (Portfolio)<br>Selected works<br>2019 — <span data-year>2026</span>
+        </p>
+      </div>
+
+      <h1 class="hero__title">
+        <span class="hero__line"><span class="split">Rojina</span></span>
+      </h1>
+
+      <div class="hero__bottom" data-hero-fade>
+        <span>Based in Kathmandu — working worldwide</span>
+        <span class="hero__scroll">Scroll<i></i></span>
+        <span class="hero__disc">Brand · Digital · Motion</span>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="about section" id="about" data-scene="about">
+      <div class="label" data-reveal><span>(01)</span><span>About</span></div>
+
+      <p class="about__statement" data-words>
+        I believe good design is <em>felt</em> before it is understood. I build identities, products and moving images that are rigorous underneath and <em>joyful</em> on the surface — systems with a little bit of magic.
+      </p>
+
+      <div class="about__grid">
+        <div class="about__portrait" data-reveal>
+          <div class="portrait">
+            <span class="portrait__initial">R</span>
+            <span class="portrait__caption">Rojina — Designer</span>
+          </div>
+        </div>
+
+        <div class="about__text" data-reveal>
+          <p>Over the past years I've partnered with startups, cultural institutions and global brands to turn fuzzy ideas into clear, expressive design. My work lives at the meeting point of strategy, typography and motion.</p>
+          <p>Whether it's a logo, a product interface or a launch film, I care about the details nobody asks for — the ones everybody notices.</p>
+        </div>
+
+        <ul class="stats">
+          <li data-reveal><span class="stats__num"><span data-count="7">0</span>+</span><span class="stats__label">Years of practice</span></li>
+          <li data-reveal><span class="stats__num"><span data-count="120">0</span>+</span><span class="stats__label">Projects delivered</span></li>
+          <li data-reveal><span class="stats__num"><span data-count="14">0</span></span><span class="stats__label">Awards &amp; features</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services section" id="services" data-scene="services">
+      <div class="label" data-reveal><span>(02)</span><span>Services</span></div>
+      <h2 class="section-title">
+        <span class="line"><span>What I</span></span>
+        <span class="line"><span><em>can do</em> for you</span></span>
+      </h2>
+
+      <ul class="services__list">
+        <li class="service">
+          <span class="service__num">01</span>
+          <h3 class="service__title">Brand Identity</h3>
+          <p class="service__tags">Strategy, Naming, Logo, Visual systems, Guidelines</p>
+          <span class="service__arrow" aria-hidden="true">↗</span>
+        </li>
+        <li class="service">
+          <span class="service__num">02</span>
+          <h3 class="service__title">UI / UX Design</h3>
+          <p class="service__tags">Product design, Web, Design systems, Prototyping</p>
+          <span class="service__arrow" aria-hidden="true">↗</span>
+        </li>
+        <li class="service">
+          <span class="service__num">03</span>
+          <h3 class="service__title">Motion &amp; 3D</h3>
+          <p class="service__tags">Brand motion, Product animation, 3D visuals</p>
+          <span class="service__arrow" aria-hidden="true">↗</span>
+        </li>
+        <li class="service">
+          <span class="service__num">04</span>
+          <h3 class="service__title">Art Direction</h3>
+          <p class="service__tags">Campaigns, Editorial, Packaging, Photography</p>
+          <span class="service__arrow" aria-hidden="true">↗</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Work -->
+    <section class="work" id="work" data-scene="work" data-theme="dark">
+      <div class="work__pin">
+        <div class="work__head">
+          <div>
+            <div class="label" data-reveal><span>(03)</span><span>Selected work</span></div>
+            <h2 class="section-title">
+              <span class="line"><span>Selected</span></span>
+              <span class="line"><span><em>projects</em></span></span>
+            </h2>
+          </div>
+          <div class="work__meta" data-reveal>
+            <p>A handful of recent collaborations across identity, product and motion.</p>
+            <div class="work__progress"><span></span></div>
+          </div>
+        </div>
+
+        <div class="work__track">
+          <!--
+            Each project card: swap the .cover art for a real image with
+            <img src="assets/work/your-image.jpg" alt="..."> inside .project__media
+          -->
+          <article class="project" data-cursor="View">
+            <a href="#" class="project__link">
+              <div class="project__media">
+                <div class="cover cover--aurora">
+                  <span class="cover__glyph">A</span>
+                  <span class="cover__tag">Aurora — Identity system</span>
+                </div>
+              </div>
+              <div class="project__info">
+                <span class="project__num">01</span>
+                <h3 class="project__title">Aurora Bank</h3>
+                <span class="project__cat">Brand Identity · 2026</span>
+              </div>
+            </a>
+          </article>
+
+          <article class="project" data-cursor="View">
+            <a href="#" class="project__link">
+              <div class="project__media">
+                <div class="cover cover--mira">
+                  <span class="cover__pill"></span>
+                  <span class="cover__sun"></span>
+                  <span class="cover__word">mira</span>
+                </div>
+              </div>
+              <div class="project__info">
+                <span class="project__num">02</span>
+                <h3 class="project__title">Mira Skincare</h3>
+                <span class="project__cat">Packaging · 2025</span>
+              </div>
+            </a>
+          </article>
+
+          <article class="project" data-cursor="View">
+            <a href="#" class="project__link">
+              <div class="project__media">
+                <div class="cover cover--field">
+                  <div class="phone">
+                    <span class="phone__head"></span>
+                    <span class="phone__row"></span>
+                    <span class="phone__row phone__row--s"></span>
+                    <span class="phone__card"></span>
+                    <span class="phone__row"></span>
+                    <span class="phone__row phone__row--s"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="project__info">
+                <span class="project__num">03</span>
+                <h3 class="project__title">Fieldnotes</h3>
+                <span class="project__cat">Product Design · 2025</span>
+              </div>
+            </a>
+          </article>
+
+          <article class="project" data-cursor="View">
+            <a href="#" class="project__link">
+              <div class="project__media">
+                <div class="cover cover--kora">
+                  <span class="cover__poster">KO<br>RA</span>
+                  <span class="cover__small">Festival of sound<br>— 26</span>
+                </div>
+              </div>
+              <div class="project__info">
+                <span class="project__num">04</span>
+                <h3 class="project__title">Kora Festival</h3>
+                <span class="project__cat">Art Direction · 2024</span>
+              </div>
+            </a>
+          </article>
+
+          <article class="project" data-cursor="View">
+            <a href="#" class="project__link">
+              <div class="project__media">
+                <div class="cover cover--still">
+                  <span class="cover__word">Still.</span>
+                </div>
+              </div>
+              <div class="project__info">
+                <span class="project__num">05</span>
+                <h3 class="project__title">Still — Title Sequence</h3>
+                <span class="project__cat">Motion · 2024</span>
+              </div>
+            </a>
+          </article>
+
+          <div class="work__end">
+            <a href="#" class="work__all" data-magnetic>
+              <span>All projects</span><em>on Behance</em>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Let's make something <em>beautiful</em></span><i>✦</i>
+        <span>Available for freelance</span><i>✦</i>
+        <span>Let's make something <em>beautiful</em></span><i>✦</i>
+        <span>Available for freelance</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <section class="contact section" id="contact" data-scene="contact">
+      <div class="label" data-reveal><span>(04)</span><span>Contact</span></div>
+
+      <div class="contact__main">
+        <h2 class="contact__title">
+          <span class="line"><span>Have a project</span></span>
+          <span class="line"><span><em>in mind?</em></span></span>
+        </h2>
+        <a href="mailto:hello@rojina.design" class="contact__btn" data-magnetic="0.5">
+          <span>Let's talk</span>
+        </a>
+      </div>
+
+      <a href="mailto:hello@rojina.design" class="contact__mail" data-reveal>hello@rojina.design</a>
+
+      <footer class="footer">
+        <div class="footer__col">
+          <span class="footer__head">Socials</span>
+          <a href="https://www.behance.net/" target="_blank" rel="noopener">Behance</a>
+          <a href="https://dribbble.com/" target="_blank" rel="noopener">Dribbble</a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__head">Location</span>
+          <span>Kathmandu, Nepal</span>
+          <span data-time>—</span>
+        </div>
+        <div class="footer__col">
+          <span class="footer__head">Version</span>
+          <span>© <span data-year>2026</span> Rojina</span>
+          <span>All rights reserved</span>
+        </div>
+        <div class="footer__col footer__col--end">
+          <a href="#top" class="footer__top" data-magnetic>Back to top ↑</a>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
