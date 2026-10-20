@@ -832,6 +832,16 @@ main { position: relative; z-index: 2; }
 }
 .footer__top { display: inline-block; }
 
+.social { display: inline-flex; align-items: center; gap: 8px; }
+.social__icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  fill: currentColor;
+  transition: fill .3s, transform .5s var(--ease);
+}
+.social:hover .social__icon { fill: var(--accent); transform: scale(1.15); }
+
 /* ---------- Inner pages (work index + case study) ---------- */
 
 .page-hero {

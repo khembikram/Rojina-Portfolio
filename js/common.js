@@ -5,7 +5,7 @@
 export const CONFIG = {
   timeZone: 'Asia/Kathmandu',
   city: 'KTM',
-  email: 'hello@rojina.design',
+  email: 'chhetrirojina247@gmail.com',
 };
 
 export const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
