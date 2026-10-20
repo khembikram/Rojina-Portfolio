@@ -19,9 +19,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script>try{if(sessionStorage.getItem('pt'))document.documentElement.classList.add('is-arriving')}catch(e){}</script>
 </head>
 
 <body data-page="project">
+
+  <!-- Page transition curtain -->
+  <div class="transition" aria-hidden="true">
+    <span class="transition__brand">Rojina<sup>®</sup></span>
+    <span class="transition__mask"><span class="transition__label"></span></span>
+  </div>
 
   <!-- Custom cursor -->
   <div class="cursor" aria-hidden="true">
@@ -35,10 +42,10 @@
   <header class="nav">
     <a href="index.html" class="nav__logo">Rojina<sup>®</sup></a>
     <nav class="nav__links" aria-label="Primary">
-      <a href="work.html" aria-current="page">Work<sup>05</sup></a>
-      <a href="index.html#about">About</a>
+      <a href="work.html">Work<sup>05</sup></a>
+      <a href="about.html">About</a>
       <a href="index.html#services">Services</a>
-      <a href="#contact">Contact</a>
+      <a href="contact.html">Contact</a>
     </nav>
     <span class="nav__status"><i></i>Available for projects</span>
     <span class="nav__time" data-time>—</span>
@@ -58,7 +65,7 @@
           <span class="line"><span>Have a project</span></span>
           <span class="line"><span><em>in mind?</em></span></span>
         </h2>
-        <a href="mailto:hello@rojina.design" class="contact__btn" data-magnetic="0.5">
+        <a href="contact.html" class="contact__btn" data-magnetic="0.5">
           <span>Let's talk</span>
         </a>
       </div>

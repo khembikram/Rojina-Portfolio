@@ -3,7 +3,8 @@
    ========================================================================== */
 
 import {
-  reduce, setupStatic, setupLenis, scrollToTarget, setupCursor, setupMagnetic, setupReveals,
+  reduce, canHover, setupStatic, splitChars, setupLenis, scrollToTarget,
+  setupTransitions, setupMenu, setupCursor, setupMagnetic, setupReveals,
 } from './common.js';
 
 const THEMES = {
@@ -41,42 +42,6 @@ if (!window.gsap || !window.ScrollTrigger) {
   init();
 }
 
-/* ---------- Helpers ---------- */
-
-function splitChars(el) {
-  const text = el.textContent.trim();
-  el.setAttribute('aria-label', text);
-  el.innerHTML = [...text]
-    .map((c) => `<span class="char" aria-hidden="true">${c === ' ' ? '&nbsp;' : c}</span>`)
-    .join('');
-  return el.querySelectorAll('.char');
-}
-
-function splitWords(el) {
-  const frag = document.createDocumentFragment();
-  [...el.childNodes].forEach((node) => {
-    if (node.nodeType === Node.TEXT_NODE) {
-      node.textContent.split(/(\s+)/).forEach((part) => {
-        if (!part) return;
-        if (/^\s+$/.test(part)) {
-          frag.append(' ');
-        } else {
-          const span = document.createElement('span');
-          span.className = 'word';
-          span.textContent = part;
-          frag.append(span);
-        }
-      });
-    } else {
-      node.classList.add('word');
-      frag.append(node);
-    }
-  });
-  el.textContent = '';
-  el.append(frag);
-  return el.querySelectorAll('.word');
-}
-
 /* ---------- Main ---------- */
 
 async function init() {
@@ -87,8 +52,10 @@ async function init() {
   window.scrollTo(0, 0);
 
   /* Smooth scroll (paused until the intro finishes) */
+  setupMenu(gsap);
   const lenis = setupLenis(gsap, ScrollTrigger);
   lenis?.stop();
+  setupTransitions(gsap);
 
   /* Loader counter runs while fonts + WebGL load */
   const num = document.querySelector('.loader__num');
@@ -130,6 +97,7 @@ async function init() {
     ScrollTrigger.refresh();
     const dest = location.hash && document.querySelector(location.hash);
     if (dest) scrollToTarget(lenis, dest, true);
+    setupHeroRipple(gsap, heroChars);
   });
 
   setupCursor(gsap);
@@ -137,6 +105,37 @@ async function init() {
   setupPointer();
   setupReveals(gsap);
   setupScroll(gsap, ScrollTrigger);
+}
+
+/* ---------- Hero letters rise towards the cursor ---------- */
+
+function setupHeroRipple(gsap, chars) {
+  if (!canHover || reduce) return;
+  const hero = document.querySelector('.hero');
+  const items = [...chars].map((el) => ({
+    el,
+    y: gsap.quickTo(el, 'yPercent', { duration: 0.8, ease: 'power3' }),
+    r: gsap.quickTo(el, 'rotate', { duration: 0.8, ease: 'power3' }),
+    cx: 0,
+  }));
+  const measure = () => items.forEach((it) => {
+    const r = it.el.getBoundingClientRect();
+    it.cx = r.left + r.width / 2;
+  });
+  measure();
+  window.addEventListener('resize', measure);
+
+  hero.addEventListener('pointermove', (e) => {
+    const reach = innerWidth * 0.16;
+    items.forEach((it) => {
+      const d = e.clientX - it.cx;
+      const lift = Math.max(0, 1 - Math.abs(d) / reach);
+      const eased = lift * lift * (3 - 2 * lift);
+      it.y(-eased * 14);
+      it.r(eased * Math.sign(d) * -4);
+    });
+  });
+  hero.addEventListener('pointerleave', () => items.forEach((it) => { it.y(0); it.r(0); }));
 }
 
 /* ---------- Pointer drives the 3D scene (mouse on desktop, touch drag on mobile) ---------- */
@@ -188,17 +187,6 @@ function setupScroll(gsap, ScrollTrigger) {
     yPercent: 30,
     ease: 'none',
     scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
-  });
-
-  /* About statement: words light up as you read */
-  document.querySelectorAll('[data-words]').forEach((el) => {
-    const words = splitWords(el);
-    gsap.fromTo(words, { opacity: 0.12 }, {
-      opacity: 1,
-      stagger: 0.1,
-      ease: 'none',
-      scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 50%', scrub: true },
-    });
   });
 
   /* Count-up stats */
@@ -276,12 +264,19 @@ function setupScroll(gsap, ScrollTrigger) {
     });
   });
 
-  /* Marquee that speeds up with scroll velocity */
+  /* Marquee that speeds up with scroll velocity; project cards lean into the motion */
   const marquee = gsap.to('.marquee__track', { xPercent: -50, duration: 24, ease: 'none', repeat: -1 });
+  const projects = gsap.utils.toArray('.work__track .project');
   ScrollTrigger.create({
     onUpdate: (self) => {
       const velocity = self.getVelocity();
       scene?.kick(velocity);
+      gsap.to(projects, {
+        skewX: gsap.utils.clamp(-7, 7, velocity / -350),
+        duration: 0.3,
+        overwrite: true,
+        onComplete: () => gsap.to(projects, { skewX: 0, duration: 0.9, ease: 'power3.out' }),
+      });
       const boost = 1 + Math.min(Math.abs(velocity) / 250, 6);
       gsap.to(marquee, {
         timeScale: boost,

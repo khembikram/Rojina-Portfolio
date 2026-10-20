@@ -152,6 +152,8 @@ const PRESETS = {
   services: { x: -2.4, y: 0.2,   scale: 0.58, distort: 0.26, freq: 2.0,  hue: 0.36 },
   work:     { x: 0,    y: 0,     scale: 1.45, distort: 0.55, freq: 0.8,  hue: 0.55 },
   contact:  { x: 1.8,  y: 0.4,   scale: 0.95, distort: 0.4,  freq: 1.2,  hue: 0.08 },
+  hello:    { x: 2.8,  y: 0.4,   scale: 0.72, distort: 0.42, freq: 1.1,  hue: 0.08 },
+  brief:    { x: 3.4,  y: 1.5,   scale: 0.32, distort: 0.5,  freq: 1.6,  hue: 0.3 },
 };
 
 export function createScene(canvas, { reduce = false } = {}) {

@@ -8,11 +8,15 @@ A static designer portfolio built with **Three.js** (WebGL blob), **GSAP + Scrol
 index.html            home page markup and content
 work.html             all projects, with category filters
 project.html          case study page (project.html?p=<slug>)
+about.html            about page with the particle portrait
+contact.html          project brief form (opens a pre-filled email) + FAQ
 404.html              GitHub Pages "not found" page
 css/style.css         all styles (colors and fonts in :root)
-js/common.js          shared: cursor, smooth scroll, reveals, clock
+js/common.js          shared: page transitions, mobile menu, cursor, smooth scroll, reveals
+                      (the contact email address lives in CONFIG here)
 js/main.js            home: loader, 3D choreography, horizontal work scroll
-js/page.js            work + case study pages: renders from projects.js
+js/page.js            inner pages: work grid, case studies, about + contact interactions
+js/portrait.js        Three.js particle portrait built from assets/rojina.jpg
 js/projects.js        project titles, text and covers (edit this)
 js/scene.js           Three.js scene (noise-displaced shader blob + dust)
 assets/               favicon, portrait (rojina.jpg) and your images

@@ -5,10 +5,27 @@
 export const CONFIG = {
   timeZone: 'Asia/Kathmandu',
   city: 'KTM',
+  email: 'hello@rojina.design',
 };
 
 export const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 export const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+/* Names shown on the page-transition curtain */
+const PAGE_NAMES = {
+  '': 'Home',
+  'index.html': 'Home',
+  'work.html': 'Work',
+  'project.html': 'Case study',
+  'about.html': 'About',
+  'contact.html': 'Contact',
+};
+
+const store = {
+  get(key) { try { return sessionStorage.getItem(key); } catch { return null; } },
+  set(key, value) { try { sessionStorage.setItem(key, value); } catch { /* private mode */ } },
+  remove(key) { try { sessionStorage.removeItem(key); } catch { /* private mode */ } },
+};
 
 /* ---------- Static bits that don't need GSAP ---------- */
 
@@ -25,16 +42,56 @@ export function setupStatic() {
   };
   tickClock();
   setInterval(tickClock, 10000);
+
+  // Without GSAP there is no curtain animation, so never leave it covering the page
+  if (!window.gsap) document.documentElement.classList.remove('is-arriving');
+}
+
+/* ---------- Text splitting ---------- */
+
+export function splitChars(el) {
+  const text = el.textContent.trim();
+  el.setAttribute('aria-label', text);
+  el.innerHTML = [...text]
+    .map((c) => `<span class="char" aria-hidden="true">${c === ' ' ? '&nbsp;' : c}</span>`)
+    .join('');
+  return el.querySelectorAll('.char');
+}
+
+export function splitWords(el) {
+  const frag = document.createDocumentFragment();
+  [...el.childNodes].forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      node.textContent.split(/(\s+)/).forEach((part) => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) {
+          frag.append(' ');
+        } else {
+          const span = document.createElement('span');
+          span.className = 'word';
+          span.textContent = part;
+          frag.append(span);
+        }
+      });
+    } else {
+      node.classList.add('word');
+      frag.append(node);
+    }
+  });
+  el.textContent = '';
+  el.append(frag);
+  return el.querySelectorAll('.word');
 }
 
 /* ---------- Smooth scroll + in-page anchors ---------- */
 
+let lenisInstance = null;
+
 export function setupLenis(gsap, ScrollTrigger) {
-  let lenis = null;
   if (!reduce && typeof window.Lenis === 'function') {
-    lenis = new window.Lenis({ lerp: 0.09 });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    lenisInstance = new window.Lenis({ lerp: 0.09 });
+    lenisInstance.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenisInstance.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
   }
 
@@ -45,11 +102,11 @@ export function setupLenis(gsap, ScrollTrigger) {
       const dest = id === '#top' ? 0 : document.querySelector(id);
       if (dest === null) return;
       e.preventDefault();
-      scrollToTarget(lenis, dest);
+      scrollToTarget(lenisInstance, dest);
     });
   });
 
-  return lenis;
+  return lenisInstance;
 }
 
 export function scrollToTarget(lenis, dest, immediate = false) {
@@ -59,6 +116,121 @@ export function scrollToTarget(lenis, dest, immediate = false) {
     const top = dest === 0 ? 0 : dest.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({ top, behavior: reduce || immediate ? 'auto' : 'smooth' });
   }
+}
+
+/* ---------- Page transitions (curtain wipe between pages) ---------- */
+
+const pageKey = (url) => url.pathname.split('/').pop();
+
+export function setupTransitions(gsap) {
+  const curtain = document.querySelector('.transition');
+  if (!curtain) return;
+  const label = curtain.querySelector('.transition__label');
+  const html = document.documentElement;
+  const hidden = 'inset(100% 0% 0% 0%)';
+  const covered = 'inset(0% 0% 0% 0%)';
+  const gone = 'inset(0% 0% 100% 0%)';
+
+  /* Arriving: lift the curtain (the home page has its own loader instead) */
+  const arriving = store.get('pt');
+  store.remove('pt');
+  if (arriving && html.classList.contains('is-arriving') && !document.querySelector('.loader')) {
+    label.textContent = arriving;
+    gsap.set(curtain, { clipPath: covered });
+    html.classList.remove('is-arriving');
+    gsap.timeline({ delay: 0.15 })
+      .to(label, { yPercent: -100, autoAlpha: 0, duration: 0.5, ease: 'power3.in' })
+      .to(curtain, { clipPath: gone, duration: reduce ? 0.01 : 1, ease: 'expo.inOut' }, '-=0.2')
+      .set(curtain, { clipPath: hidden });
+  } else {
+    html.classList.remove('is-arriving');
+  }
+
+  /* Leaving: drop the curtain, then navigate */
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href]');
+    if (!link || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (link.target === '_blank' || link.hasAttribute('download')) return;
+    const url = new URL(link.href, location.href);
+    if (url.origin !== location.origin || !(pageKey(url) in PAGE_NAMES)) return;
+    if (url.pathname === location.pathname && url.search === location.search) return;
+
+    e.preventDefault();
+    const name = PAGE_NAMES[pageKey(url)];
+    store.set('pt', name);
+    label.textContent = name;
+    lenisInstance?.stop();
+    gsap.timeline({ onComplete: () => { location.href = url.href; } })
+      .set(curtain, { clipPath: hidden })
+      .set(label, { yPercent: 100, autoAlpha: 0 })
+      .to(curtain, { clipPath: covered, duration: reduce ? 0.01 : 0.8, ease: 'expo.inOut' })
+      .to(label, { yPercent: 0, autoAlpha: 1, duration: 0.5, ease: 'power3.out' }, '-=0.3');
+  });
+
+  /* Back/forward cache restores the page with the curtain still down */
+  window.addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
+    gsap.set(curtain, { clipPath: hidden });
+    lenisInstance?.start();
+  });
+}
+
+/* ---------- Mobile menu ---------- */
+
+export function setupMenu(gsap) {
+  const nav = document.querySelector('.nav');
+  const links = nav?.querySelectorAll('.nav__links a');
+  if (!links?.length) return;
+
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'nav__menu';
+  button.setAttribute('aria-expanded', 'false');
+  button.setAttribute('aria-controls', 'menu');
+  button.textContent = 'Menu';
+  nav.append(button);
+
+  const menu = document.createElement('div');
+  menu.className = 'menu';
+  menu.id = 'menu';
+  menu.hidden = true;
+  const home = document.querySelector('.nav__logo')?.getAttribute('href') || 'index.html';
+  const items = [['Home', home === '#top' ? '#top' : 'index.html'], ...[...links].map((a) => [a.childNodes[0].textContent.trim(), a.getAttribute('href')])];
+  menu.innerHTML = `
+    <nav class="menu__links" aria-label="Menu">
+      ${items.map(([text, href], i) => `<a href="${href}"><span class="menu__num">0${i + 1}</span><span class="menu__text">${text}</span></a>`).join('')}
+    </nav>
+    <div class="menu__foot">
+      <a href="mailto:${CONFIG.email}">${CONFIG.email}</a>
+      <span data-time>${document.querySelector('[data-time]')?.textContent || ''}</span>
+    </div>`;
+  document.body.append(menu);
+
+  let open = false;
+  const tl = gsap.timeline({ paused: true, onReverseComplete: () => { menu.hidden = true; } })
+    .fromTo(menu, { clipPath: 'circle(0% at 100% 0%)' }, { clipPath: 'circle(150% at 100% 0%)', duration: reduce ? 0.01 : 0.9, ease: 'expo.inOut' })
+    .from(menu.querySelectorAll('.menu__text'), { yPercent: 110, duration: 0.9, stagger: 0.06, ease: 'expo.out' }, '-=0.45')
+    .from(menu.querySelectorAll('.menu__num, .menu__foot'), { autoAlpha: 0, duration: 0.6, stagger: 0.04 }, '<0.1');
+
+  const toggle = (state) => {
+    open = state;
+    button.setAttribute('aria-expanded', String(open));
+    button.textContent = open ? 'Close' : 'Menu';
+    document.body.classList.toggle('menu-open', open);
+    if (open) {
+      menu.hidden = false;
+      lenisInstance?.stop();
+      tl.timeScale(1).play();
+    } else {
+      lenisInstance?.start();
+      tl.timeScale(1.6).reverse();
+    }
+  };
+
+  button.addEventListener('click', () => toggle(!open));
+  // Capture phase: close (and restart smooth scroll) before an anchor link scrolls
+  menu.addEventListener('click', (e) => { if (e.target.closest('a')) toggle(false); }, true);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) toggle(false); });
 }
 
 /* ---------- Cursor ---------- */
@@ -86,7 +258,7 @@ export function setupCursor(gsap) {
 
   document.addEventListener('pointerover', (e) => {
     const view = e.target.closest('[data-cursor]');
-    const link = e.target.closest('a, button, .service');
+    const link = e.target.closest('a, button, label, .service');
     cursor.classList.toggle('is-view', !!view);
     cursor.classList.toggle('is-hover', !view && !!link);
     if (view) label.textContent = view.dataset.cursor;
@@ -136,6 +308,17 @@ export function setupReveals(gsap) {
       stagger: 0.1,
       ease: 'expo.out',
       scrollTrigger: { trigger: title, start: 'top 85%' },
+    });
+  });
+
+  /* Words light up as you read */
+  document.querySelectorAll('[data-words]').forEach((el) => {
+    const words = splitWords(el);
+    gsap.fromTo(words, { opacity: 0.12 }, {
+      opacity: 1,
+      stagger: 0.1,
+      ease: 'none',
+      scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 50%', scrub: true },
     });
   });
 

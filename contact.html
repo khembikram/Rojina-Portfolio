@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — Rojina</title>
+  <meta name="description" content="Start a project with Rojina — brand identity, UI/UX, motion and art direction.">
+  <meta name="theme-color" content="#EDEAE4">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact — Rojina">
+  <meta property="og:description" content="Start a project with Rojina — brand identity, UI/UX, motion and art direction.">
+  <meta property="og:url" content="https://rojina247.com.np/contact.html">
+  <meta property="og:image" content="https://rojina247.com.np/assets/rojina.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>try{if(sessionStorage.getItem('pt'))document.documentElement.classList.add('is-arriving')}catch(e){}</script>
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+  </script>
+</head>
+
+<body data-page="contact">
+
+  <!-- Page transition curtain -->
+  <div class="transition" aria-hidden="true">
+    <span class="transition__brand">Rojina<sup>®</sup></span>
+    <span class="transition__mask"><span class="transition__label"></span></span>
+  </div>
+
+  <!-- Custom cursor -->
+  <div class="cursor" aria-hidden="true">
+    <div class="cursor__ring"><span class="cursor__label">View</span></div>
+    <div class="cursor__dot"></div>
+  </div>
+
+  <canvas class="webgl" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <header class="nav">
+    <a href="index.html" class="nav__logo">Rojina<sup>®</sup></a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="work.html">Work<sup>05</sup></a>
+      <a href="about.html">About</a>
+      <a href="index.html#services">Services</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+    </nav>
+    <span class="nav__status"><i></i>Available for projects</span>
+    <span class="nav__time" data-time>—</span>
+  </header>
+
+  <main id="top" class="page">
+    <section class="page-hero contact-hero" data-scene="hello">
+      <div class="label" data-page-fade><span>(Contact)</span><span>Let's talk</span></div>
+      <h1 class="page-title">
+        <span class="line"><span>Let's make</span></span>
+        <span class="line"><span>something <em>good</em></span></span>
+      </h1>
+      <p class="page-hero__lead" data-page-fade>Tell me a little about your project and I'll get back to you within a couple of working days.</p>
+    </section>
+
+    <section class="brief section" data-scene="brief" aria-labelledby="brief-title">
+      <form class="brief__form" data-brief novalidate>
+        <h2 class="brief__title" id="brief-title" data-reveal>Project brief</h2>
+
+        <fieldset class="brief__group" data-reveal>
+          <legend>I'm interested in</legend>
+          <div class="chips"><label class="chip"><input type="checkbox" name="services" value="Brand identity"><span>Brand identity</span></label><label class="chip"><input type="checkbox" name="services" value="UI / UX design"><span>UI / UX design</span></label><label class="chip"><input type="checkbox" name="services" value="Motion &amp; 3D"><span>Motion &amp; 3D</span></label><label class="chip"><input type="checkbox" name="services" value="Art direction"><span>Art direction</span></label><label class="chip"><input type="checkbox" name="services" value="Something else"><span>Something else</span></label></div>
+        </fieldset>
+
+        <fieldset class="brief__group" data-reveal>
+          <legend>Budget</legend>
+          <div class="chips"><label class="chip"><input type="radio" name="budget" value="Under $1k"><span>Under $1k</span></label><label class="chip"><input type="radio" name="budget" value="$1k – $5k"><span>$1k – $5k</span></label><label class="chip"><input type="radio" name="budget" value="$5k – $10k"><span>$5k – $10k</span></label><label class="chip"><input type="radio" name="budget" value="$10k+"><span>$10k+</span></label><label class="chip"><input type="radio" name="budget" value="Not sure yet"><span>Not sure yet</span></label></div>
+        </fieldset>
+
+        <div class="brief__fields" data-reveal>
+          <label class="field"><span class="field__label">Your name</span><input name="name" autocomplete="name" required></label>
+          <label class="field"><span class="field__label">Email</span><input type="email" name="email" autocomplete="email" required></label>
+          <label class="field field--full"><span class="field__label">Project details</span><textarea name="message" rows="4" required></textarea></label>
+        </div>
+
+        <div class="brief__submit" data-reveal>
+          <button type="submit" class="contact__btn brief__btn" data-magnetic="0.4"><span>Send brief</span></button>
+          <p class="brief__note" data-brief-note aria-live="polite">Opens your email app with everything filled in.</p>
+        </div>
+      </form>
+
+      <aside class="brief__aside" data-reveal>
+        <div class="brief__info">
+          <span class="footer__head">Email</span>
+          <a href="mailto:hello@rojina.design" class="brief__mail">hello@rojina.design</a>
+        </div>
+        <div class="brief__info">
+          <span class="footer__head">Based in</span>
+          <span>Kathmandu, Nepal</span>
+          <span data-time>—</span>
+        </div>
+        <div class="brief__info">
+          <span class="footer__head">Status</span>
+          <span class="nav__status"><i></i>Available for projects</span>
+        </div>
+        <div class="brief__info">
+          <span class="footer__head">Socials</span>
+          <a href="https://www.behance.net/" target="_blank" rel="noopener">Behance</a>
+          <a href="https://dribbble.com/" target="_blank" rel="noopener">Dribbble</a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section faq" data-scene="brief" aria-labelledby="faq-title">
+      <div class="label" data-reveal><span>(FAQ)</span><span>Good to know</span></div>
+      <h2 class="section-title" id="faq-title">
+        <span class="line"><span>Questions,</span></span>
+        <span class="line"><span><em>answered</em></span></span>
+      </h2>
+      <div class="faq__list">
+        <details class="faq__item" data-reveal>
+          <summary><span class="faq__q">How does a project start?</span><i aria-hidden="true"></i></summary>
+          <div class="faq__a"><p>Send a short brief using the form above or by email. I reply within a couple of working days to set up a call, then follow up with a proposal covering scope, timeline and cost.</p></div>
+        </details>
+        <details class="faq__item" data-reveal>
+          <summary><span class="faq__q">How long does a project take?</span><i aria-hidden="true"></i></summary>
+          <div class="faq__a"><p>It depends on the scope. A focused identity or landing page usually takes a few weeks; larger systems and products take longer. You get a clear timeline before anything starts.</p></div>
+        </details>
+        <details class="faq__item" data-reveal>
+          <summary><span class="faq__q">Do you work with clients outside Nepal?</span><i aria-hidden="true"></i></summary>
+          <div class="faq__a"><p>Yes. I am based in Kathmandu and work remotely with clients in any time zone, with regular check-ins over video calls.</p></div>
+        </details>
+        <details class="faq__item" data-reveal>
+          <summary><span class="faq__q">What do you need from me?</span><i aria-hidden="true"></i></summary>
+          <div class="faq__a"><p>A clear idea of your goals, your audience and any existing material — brand assets, references or content. Honest feedback along the way makes the work better.</p></div>
+        </details>
+      </div>
+    </section>
+
+    <section class="contact contact--short section" id="contact">
+      <footer class="footer">
+        <div class="footer__col">
+          <span class="footer__head">Socials</span>
+          <a href="https://www.behance.net/" target="_blank" rel="noopener">Behance</a>
+          <a href="https://dribbble.com/" target="_blank" rel="noopener">Dribbble</a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__head">Location</span>
+          <span>Kathmandu, Nepal</span>
+          <span data-time>—</span>
+        </div>
+        <div class="footer__col">
+          <span class="footer__head">Version</span>
+          <span>© <span data-year>2026</span> Rojina</span>
+          <span>All rights reserved</span>
+        </div>
+        <div class="footer__col footer__col--end">
+          <a href="#top" class="footer__top" data-magnetic>Back to top ↑</a>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script type="module" src="js/page.js"></script>
+</body>
+</html>
