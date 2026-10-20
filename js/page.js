@@ -3,7 +3,7 @@
    ========================================================================== */
 
 import {
-  CONFIG, reduce, setupStatic, setupLenis, setupTransitions, setupMenu, setupCursor, setupMagnetic, setupReveals,
+  CONFIG, reduce, canHover, setupStatic, setupLenis, setupTransitions, setupMenu, setupCursor, setupMagnetic, setupReveals,
 } from './common.js';
 import { PROJECTS, FILTERS } from './projects.js';
 
@@ -197,6 +197,8 @@ async function init() {
 
 function setupAbout(gsap, onEnter) {
   const holder = document.querySelector('[data-portrait]');
+  const hint = holder.querySelector('.particle-portrait__hint');
+  if (hint && !canHover) hint.textContent = 'Tap or drag across the portrait';
   import('./portrait.js')
     .then(({ createPortrait }) => createPortrait(holder, { src: 'assets/rojina.jpg', reduce }))
     .then((portrait) => {

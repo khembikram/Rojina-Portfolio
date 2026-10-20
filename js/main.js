@@ -193,6 +193,8 @@ function setupScroll(gsap, ScrollTrigger) {
   document.querySelectorAll('[data-count]').forEach((el) => {
     const end = Number(el.dataset.count);
     const obj = { v: 0 };
+    // The real number is in the HTML so it still shows without JS or motion
+    el.textContent = '0';
     gsap.to(obj, {
       v: end,
       duration: 2,

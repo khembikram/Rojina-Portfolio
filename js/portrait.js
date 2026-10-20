@@ -147,11 +147,14 @@ export async function createPortrait(container, { src, reduce = false }) {
   /* Pointer in world units */
   const mouse = new THREE.Vector2(99, 99);
   if (!reduce) {
-    container.addEventListener('pointermove', (e) => {
+    const onPointer = (e) => {
       const r = container.getBoundingClientRect();
       mouse.set(((e.clientX - r.left) / r.width - 0.5) * frustum.w, (0.5 - (e.clientY - r.top) / r.height) * frustum.h);
       window.gsap.to(uniforms.uHover, { value: 1, duration: 0.6, overwrite: 'auto' });
-    });
+    };
+    // pointerdown lets a tap scatter the points on touch screens
+    container.addEventListener('pointerdown', onPointer);
+    container.addEventListener('pointermove', onPointer);
     container.addEventListener('pointerleave', () => {
       window.gsap.to(uniforms.uHover, { value: 0, duration: 1.2, ease: 'power2.out', overwrite: 'auto' });
     });

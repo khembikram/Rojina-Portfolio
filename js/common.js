@@ -231,6 +231,8 @@ export function setupMenu(gsap) {
   // Capture phase: close (and restart smooth scroll) before an anchor link scrolls
   menu.addEventListener('click', (e) => { if (e.target.closest('a')) toggle(false); }, true);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) toggle(false); });
+  // Rotating or resizing past the mobile breakpoint hides the button, so close the menu too
+  window.matchMedia('(min-width: 721px)').addEventListener('change', (e) => { if (e.matches && open) toggle(false); });
 }
 
 /* ---------- Cursor ---------- */
