@@ -2,10 +2,9 @@
    Rojina — Portfolio interactions (GSAP + ScrollTrigger + Lenis + Three.js)
    ========================================================================== */
 
-const CONFIG = {
-  timeZone: 'Asia/Kathmandu',
-  city: 'KTM',
-};
+import {
+  reduce, setupStatic, setupLenis, scrollToTarget, setupCursor, setupMagnetic, setupReveals,
+} from './common.js';
 
 const THEMES = {
   light: { '--bg': '#EDEAE4', '--fg': '#0E0E0E' },
@@ -14,8 +13,6 @@ const THEMES = {
 
 const root = document.documentElement;
 const body = document.body;
-const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /* Three.js is loaded lazily so a CDN/WebGL failure never blocks the site */
@@ -33,20 +30,7 @@ const scenePromise = import('./scene.js')
     return s;
   });
 
-/* ---------- Static bits that don't need GSAP ---------- */
-
-document.querySelectorAll('[data-year]').forEach((el) => {
-  el.textContent = new Date().getFullYear();
-});
-
-const timeEls = document.querySelectorAll('[data-time]');
-const timeFmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: CONFIG.timeZone });
-const tickClock = () => {
-  const t = `${CONFIG.city} ${timeFmt.format(new Date())}`;
-  timeEls.forEach((el) => { el.textContent = t; });
-};
-tickClock();
-setInterval(tickClock, 10000);
+setupStatic();
 
 /* ---------- Bail out gracefully if GSAP didn't load ---------- */
 
@@ -102,31 +86,9 @@ async function init() {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
 
-  /* Smooth scroll */
-  let lenis = null;
-  if (!reduce && typeof window.Lenis === 'function') {
-    lenis = new window.Lenis({ lerp: 0.09 });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-    lenis.stop();
-  }
-
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener('click', (e) => {
-      const id = link.getAttribute('href');
-      if (id === '#') return;
-      const dest = id === '#top' ? 0 : document.querySelector(id);
-      if (dest === null) return;
-      e.preventDefault();
-      if (lenis) {
-        lenis.scrollTo(dest, { duration: 1.6 });
-      } else {
-        const top = dest === 0 ? 0 : dest.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
-      }
-    });
-  });
+  /* Smooth scroll (paused until the intro finishes) */
+  const lenis = setupLenis(gsap, ScrollTrigger);
+  lenis?.stop();
 
   /* Loader counter runs while fonts + WebGL load */
   const num = document.querySelector('.loader__num');
@@ -166,67 +128,23 @@ async function init() {
     body.classList.remove('is-loading');
     lenis?.start();
     ScrollTrigger.refresh();
+    const dest = location.hash && document.querySelector(location.hash);
+    if (dest) scrollToTarget(lenis, dest, true);
   });
 
   setupCursor(gsap);
   setupMagnetic(gsap);
+  setupPointer();
+  setupReveals(gsap);
   setupScroll(gsap, ScrollTrigger);
 }
 
-/* ---------- Cursor ---------- */
+/* ---------- Pointer drives the 3D scene (mouse on desktop, touch drag on mobile) ---------- */
 
-function setupCursor(gsap) {
-  if (canHover) {
-    const cursor = document.querySelector('.cursor');
-    const dot = cursor.querySelector('.cursor__dot');
-    const ring = cursor.querySelector('.cursor__ring');
-    const label = cursor.querySelector('.cursor__label');
-    body.classList.add('has-cursor');
-
-    gsap.set([dot, ring], { xPercent: -50, yPercent: -50, x: innerWidth / 2, y: innerHeight / 2 });
-    const dotX = gsap.quickTo(dot, 'x', { duration: 0.12, ease: 'power3' });
-    const dotY = gsap.quickTo(dot, 'y', { duration: 0.12, ease: 'power3' });
-    const ringX = gsap.quickTo(ring, 'x', { duration: 0.55, ease: 'power3' });
-    const ringY = gsap.quickTo(ring, 'y', { duration: 0.55, ease: 'power3' });
-
-    window.addEventListener('pointermove', (e) => {
-      dotX(e.clientX); dotY(e.clientY);
-      ringX(e.clientX); ringY(e.clientY);
-      cursor.classList.remove('is-hidden');
-    });
-
-    document.addEventListener('pointerover', (e) => {
-      const view = e.target.closest('[data-cursor]');
-      const link = e.target.closest('a, button, .service');
-      cursor.classList.toggle('is-view', !!view);
-      cursor.classList.toggle('is-hover', !view && !!link);
-      if (view) label.textContent = view.dataset.cursor;
-    });
-
-    document.documentElement.addEventListener('pointerleave', () => cursor.classList.add('is-hidden'));
-  }
-
-  // Pointer also drives the 3D scene (mouse on desktop, touch drag on mobile)
+function setupPointer() {
   window.addEventListener('pointermove', (e) => {
     scene?.pointer((e.clientX / innerWidth) * 2 - 1, -((e.clientY / innerHeight) * 2 - 1));
   }, { passive: true });
-}
-
-/* ---------- Magnetic buttons ---------- */
-
-function setupMagnetic(gsap) {
-  if (!canHover || reduce) return;
-  document.querySelectorAll('[data-magnetic]').forEach((el) => {
-    const strength = parseFloat(el.dataset.magnetic) || 0.35;
-    const xTo = gsap.quickTo(el, 'x', { duration: 1, ease: 'elastic.out(1, 0.35)' });
-    const yTo = gsap.quickTo(el, 'y', { duration: 1, ease: 'elastic.out(1, 0.35)' });
-    el.addEventListener('pointermove', (e) => {
-      const r = el.getBoundingClientRect();
-      xTo((e.clientX - r.left - r.width / 2) * strength);
-      yTo((e.clientY - r.top - r.height / 2) * strength);
-    });
-    el.addEventListener('pointerleave', () => { xTo(0); yTo(0); });
-  });
 }
 
 /* ---------- Scroll choreography ---------- */
@@ -272,28 +190,6 @@ function setupScroll(gsap, ScrollTrigger) {
     scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
   });
 
-  /* Generic fade-up reveals */
-  gsap.utils.toArray('[data-reveal]').forEach((el) => {
-    gsap.from(el, {
-      y: 40,
-      autoAlpha: 0,
-      duration: 1.3,
-      ease: 'expo.out',
-      scrollTrigger: { trigger: el, start: 'top 90%' },
-    });
-  });
-
-  /* Masked line reveals for titles */
-  gsap.utils.toArray('.section-title, .contact__title').forEach((title) => {
-    gsap.from(title.querySelectorAll('.line > span'), {
-      yPercent: 110,
-      duration: 1.4,
-      stagger: 0.1,
-      ease: 'expo.out',
-      scrollTrigger: { trigger: title, start: 'top 85%' },
-    });
-  });
-
   /* About statement: words light up as you read */
   document.querySelectorAll('[data-words]').forEach((el) => {
     const words = splitWords(el);
@@ -316,13 +212,6 @@ function setupScroll(gsap, ScrollTrigger) {
       scrollTrigger: { trigger: el, start: 'top 90%' },
       onUpdate: () => { el.textContent = Math.round(obj.v); },
     });
-  });
-
-  /* Portrait parallax */
-  gsap.fromTo('.portrait__initial', { yPercent: -20 }, {
-    yPercent: 10,
-    ease: 'none',
-    scrollTrigger: { trigger: '.portrait', start: 'top bottom', end: 'bottom top', scrub: true },
   });
 
   /* Services list */
@@ -401,14 +290,5 @@ function setupScroll(gsap, ScrollTrigger) {
         onComplete: () => gsap.to(marquee, { timeScale: 1, duration: 1.2, ease: 'power2.out' }),
       });
     },
-  });
-
-  /* Contact button pop */
-  gsap.from('.contact__btn', {
-    scale: 0,
-    rotate: -45,
-    duration: 1.4,
-    ease: 'elastic.out(1, 0.5)',
-    scrollTrigger: { trigger: '.contact__main', start: 'top 75%' },
   });
 }

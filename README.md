@@ -5,12 +5,17 @@ A static designer portfolio built with **Three.js** (WebGL blob), **GSAP + Scrol
 ## Structure
 
 ```
-index.html            page markup and content
+index.html            home page markup and content
+work.html             all projects, with category filters
+project.html          case study page (project.html?p=<slug>)
 404.html              GitHub Pages "not found" page
 css/style.css         all styles (colors and fonts in :root)
-js/main.js            loader, cursor, scroll animations, theme switching
+js/common.js          shared: cursor, smooth scroll, reveals, clock
+js/main.js            home: loader, 3D choreography, horizontal work scroll
+js/page.js            work + case study pages: renders from projects.js
+js/projects.js        project titles, text and covers (edit this)
 js/scene.js           Three.js scene (noise-displaced shader blob + dust)
-assets/               favicon and your images
+assets/               favicon, portrait (rojina.jpg) and your images
 .github/workflows/    automatic GitHub Pages deploy
 .nojekyll             tells Pages to serve files as is
 ```
@@ -34,7 +39,9 @@ python -m http.server 5500
 
 ## Customising
 
-- **Text, projects, email, socials:** `index.html`
+- **Text, email, socials:** `index.html` (and the contact block in `work.html` / `project.html`)
+- **Project case studies:** `js/projects.js` — one entry per project; the home page cards link to `project.html?p=<slug>`
+- **Portrait:** replace `assets/rojina.jpg`
 - **Project images:** put files in `assets/work/` and replace each `.cover` div with
   `<img src="assets/work/name.jpg" alt="...">` inside `.project__media`. The parallax still works.
 - **Colors and fonts:** the `:root` variables in `css/style.css`. The blob palette is `uC1`–`uC4` in `js/scene.js`.
